@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Wexond Dark Reader",
-  "version": "4.7.14",
+  "version": "1.0.0",
   "author": "Wexond",
   "description": "__MSG_extension_description__",
   "default_locale": "en",

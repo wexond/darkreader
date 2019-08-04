@@ -1,6 +1,6 @@
 {
   "name": "wexond-darkreader",
-  "version": "4.7.14",
+  "version": "1.0.0",
   "description": "Dark theme for every website",
   "scripts": {
     "api": "node -e \"require('./tasks/bundle-api')()\"",
