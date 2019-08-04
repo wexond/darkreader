@@ -1,13 +1,20 @@
-const fs = require('fs');
-const globby = require('globby');
-const yazl = require('yazl');
-const {getDestDir} = require('./paths');
+const fs = require("fs");
+const globby = require("globby");
+const yazl = require("yazl");
+const {getDestDir} = require("./paths");
 
 function archiveFiles({files, dest, cwd}) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         const archive = new yazl.ZipFile();
-        files.forEach((file) => archive.addFile(file, file.startsWith(`${cwd}/`) ? file.substring(cwd.length + 1) : file));
-        archive.outputStream.pipe(fs.createWriteStream(dest)).on('close', () => resolve());
+        files.forEach(file =>
+            archive.addFile(
+                file,
+                file.startsWith(`${cwd}/`) ? file.substring(cwd.length + 1) : file
+            )
+        );
+        archive.outputStream
+            .pipe(fs.createWriteStream(dest))
+            .on("close", () => resolve());
         archive.end();
     });
 }
@@ -19,10 +26,8 @@ async function archiveDirectory({dir, dest}) {
 
 async function zip({production}) {
     const dir = getDestDir({production});
-    const firefoxDir = getDestDir({production, firefox: true});
 
-    await archiveDirectory({dir, dest: 'build.zip'});
-    await archiveDirectory({dir: firefoxDir, dest: 'build-firefox.xpi'});
+    await archiveDirectory({dir, dest: "build.zip"});
 }
 
 module.exports = zip;
