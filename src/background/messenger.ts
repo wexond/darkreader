@@ -29,6 +29,15 @@ export default class Messenger {
         this.adapter.onPopupOpen();
       }
     });
+
+    chrome.runtime.onMessage.addListener(msg => {
+      if (msg.name === "toggle") {
+        this.adapter.changeSettings({
+          enabled: msg.toggle,
+          automation: ""
+        });
+      }
+    });
   }
 
   private async onUIMessage(
