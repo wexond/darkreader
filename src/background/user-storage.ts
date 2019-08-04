@@ -3,10 +3,6 @@ import { isURLMatched } from "../utils/url";
 import { UserSettings } from "../definitions";
 
 export default class UserStorage {
-  constructor() {
-    this.settings = null;
-  }
-
   settings: Readonly<UserSettings> = {
     enabled: false,
     theme: {
@@ -29,6 +25,7 @@ export default class UserStorage {
   }
 
   set($settings: Partial<UserSettings>) {
+    console.log($settings);
     if ($settings.siteList) {
       if (!Array.isArray($settings.siteList)) {
         const list = [];
