@@ -13,14 +13,14 @@
   "main": "darkreader.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexanderby/darkreader.git"
+    "url": "https://github.com/wexond/darkreader.git"
   },
-  "author": "Aliaksandr Shutau <darkreaderapp@gmail.com> (https://darkreader.org/)",
+  "author": "Eryk Rakowski <sentialx@gmail.com> (https://wexond.net)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexanderby/darkreader/issues"
+    "url": "https://github.com/wexond/darkreader/issues"
   },
-  "homepage": "https://darkreader.org/",
+  "homepage": "https://wexond.net/",
   "dependencies": {
     "malevic": "0.16.3"
   },
