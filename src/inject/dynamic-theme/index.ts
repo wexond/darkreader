@@ -29,7 +29,6 @@ import { throttle } from "../utils/throttle";
 import { clamp } from "../../utils/math";
 import { getCSSFilterValue } from "../../generators/css-filter";
 import { modifyColor } from "../../generators/modify-colors";
-import { createTextStyle } from "../../generators/text-style";
 import { FilterConfig, DynamicThemeFix } from "../../definitions";
 
 const styleManagers = new Map<
@@ -84,11 +83,7 @@ function createStaticStyleOverrides() {
 
   const textStyle = createOrUpdateStyle("darkreader--text");
   document.head.insertBefore(textStyle, fallbackStyle.nextSibling);
-  if (filter.useFont || filter.textStroke > 0) {
-    textStyle.textContent = createTextStyle(filter);
-  } else {
-    textStyle.textContent = "";
-  }
+  textStyle.textContent = "";
   setupStylePositionWatcher(textStyle, "text");
 
   const invertStyle = createOrUpdateStyle("darkreader--invert");

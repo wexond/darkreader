@@ -4,7 +4,6 @@ export interface ExtensionData {
   isEnabled: boolean;
   isReady: boolean;
   settings: UserSettings;
-  fonts: string[];
   shortcuts: Shortcuts;
 }
 
@@ -33,9 +32,6 @@ export interface FilterConfig {
   contrast: number;
   grayscale: number;
   sepia: number;
-  useFont: boolean;
-  fontFamily: string;
-  textStroke: number;
   engine: string;
   stylesheet: string;
 }
@@ -51,11 +47,6 @@ export interface UserSettings {
   customThemes: CustomSiteConfig[];
   siteList: string[];
   applyToListedOnly: boolean;
-  changeBrowserTheme: boolean;
-  notifyOfNews: boolean;
-  syncSettings: boolean;
-  automation: string;
-  time: TimeSettings;
 }
 
 export interface TimeSettings {

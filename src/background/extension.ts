@@ -3,12 +3,10 @@ import Messenger from "./messenger";
 import TabManager from "./tab-manager";
 import UserStorage from "./user-storage";
 import {
-  getFontList,
   getCommands,
   setShortcut,
   canInjectScript
 } from "./utils/extension-api";
-import { isInTimeInterval, getDuration } from "../utils/time";
 import { isURLInList, getURLHost, isURLEnabled } from "../utils/url";
 import ThemeEngines from "../generators/theme-engines";
 import createCSSFilterStylesheet from "../generators/css-filter";
@@ -27,13 +25,10 @@ import {
   TabInfo
 } from "../definitions";
 
-const AUTO_TIME_CHECK_INTERVAL = getDuration({ seconds: 10 });
-
 export class Extension {
   ready: boolean;
 
   config: ConfigManager;
-  fonts: string[];
   messenger: Messenger;
   tabs: TabManager;
   user: UserStorage;
@@ -52,14 +47,6 @@ export class Extension {
   }
 
   isEnabled() {
-    if (this.user.settings.automation === "time") {
-      const now = new Date();
-      return isInTimeInterval(
-        now,
-        this.user.settings.time.activation,
-        this.user.settings.time.deactivation
-      );
-    }
     return this.user.settings.enabled;
   }
 
@@ -67,9 +54,7 @@ export class Extension {
 
   async start() {
     await this.config.load({ local: true });
-    this.fonts = await getFontList();
 
-    await this.user.loadSettings();
     this.changeSettings(this.user.settings);
     console.log("loaded", this.user.settings);
 
@@ -81,7 +66,6 @@ export class Extension {
     this.awaiting.forEach(ready => ready());
     this.awaiting = null;
 
-    this.startAutoTimeCheck();
     this.user.cleanup();
   }
 
@@ -121,8 +105,7 @@ export class Extension {
       if (command === "toggle") {
         console.log("Toggle command entered");
         this.changeSettings({
-          enabled: !this.isEnabled(),
-          automation: ""
+          enabled: !this.isEnabled()
         });
       }
       if (command === "addSite") {
@@ -157,7 +140,6 @@ export class Extension {
       isEnabled: this.isEnabled(),
       isReady: this.ready,
       settings: this.user.settings,
-      fonts: this.fonts,
       shortcuts: await this.getShortcuts()
     };
   }
@@ -174,25 +156,7 @@ export class Extension {
     }
   }
 
-  private wasEnabledOnLastCheck: boolean;
-
-  private startAutoTimeCheck() {
-    setInterval(() => {
-      if (!this.ready || this.user.settings.automation !== "time") {
-        return;
-      }
-      const isEnabled = this.isEnabled();
-      if (this.wasEnabledOnLastCheck !== isEnabled) {
-        this.wasEnabledOnLastCheck = isEnabled;
-        this.tabs.sendMessage(this.getTabMessage);
-        this.reportChanges();
-      }
-    }, AUTO_TIME_CHECK_INTERVAL);
-  }
-
   changeSettings($settings: Partial<UserSettings>) {
-    const prev = { ...this.user.settings };
-
     this.user.set($settings);
     this.onSettingsChanged();
   }
@@ -239,7 +203,6 @@ export class Extension {
       return;
     }
 
-    this.wasEnabledOnLastCheck = this.isEnabled();
     this.tabs.sendMessage(this.getTabMessage);
     this.saveUserSettings();
     this.reportChanges();
@@ -342,7 +305,6 @@ export class Extension {
   //          User settings
 
   private async saveUserSettings() {
-    await this.user.saveSettings();
     console.log("saved", this.user.settings);
   }
 }
