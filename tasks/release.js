@@ -1,4 +1,3 @@
-const bundleCSS = require("./bundle-css");
 const bundleHTML = require("./bundle-html");
 const bundleJS = require("./bundle-js");
 const bundleLocales = require("./bundle-locales");
@@ -12,16 +11,7 @@ async function release() {
     log.ok("RELEASE");
     try {
         await runTasks(
-            [
-                clean,
-                bundleJS,
-                bundleCSS,
-                bundleHTML,
-                bundleLocales,
-                copy,
-                codeStyle,
-                zip
-            ],
+            [clean, bundleJS, bundleHTML, bundleLocales, copy, codeStyle, zip],
             {production: true}
         );
         log.ok("MISSION PASSED! RESPECT +");
