@@ -1,5 +1,4 @@
 import { Extension } from "./extension";
-import { getHelpURL } from "../utils/links";
 
 // Initialize extension
 const extension = new Extension();
