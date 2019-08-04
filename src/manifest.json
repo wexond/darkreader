@@ -9,6 +9,7 @@
     "persistent": true,
     "page": "background/index.html"
   },
+  "converted_from_user_script": true,
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
