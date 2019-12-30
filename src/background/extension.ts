@@ -54,7 +54,7 @@ export class Extension {
 
   async start() {
     await this.config.load({ local: true });
-    await this.user.loadSettings();await this.user.loadSettings();
+    await this.user.loadSettings();
 
     this.changeSettings(this.user.settings);
     console.log("loaded", this.user.settings);
