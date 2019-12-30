@@ -3,10 +3,6 @@ import { isURLMatched } from "../utils/url";
 import { UserSettings } from "../definitions";
 
 export default class UserStorage {
-  constructor() {
-    this.settings = null;
-  }
-
   settings: Readonly<UserSettings> = {
     enabled: false,
     theme: {
