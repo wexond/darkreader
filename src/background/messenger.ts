@@ -11,7 +11,6 @@ interface ExtensionAdapter {
   getActiveTabInfo: () => Promise<TabInfo>;
   changeSettings: (settings: Partial<UserSettings>) => void;
   setTheme: (theme: Partial<FilterConfig>) => void;
-  toggleSitePattern: (pattern: string) => void;
 }
 
 export default class Messenger {
@@ -21,7 +20,7 @@ export default class Messenger {
   constructor(adapter: ExtensionAdapter) {
     this.reporters = new Set();
     this.adapter = adapter;
-    
+
     chrome.runtime.onConnect.addListener(port => {
       if (port.name === "ui") {
         port.onMessage.addListener(message => this.onUIMessage(port, message));
@@ -67,7 +66,7 @@ export default class Messenger {
         break;
       }
       case "toggle-site-pattern": {
-        this.adapter.toggleSitePattern(data);
+        //this.adapter.toggleSitePattern(data);
         break;
       }
     }

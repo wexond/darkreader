@@ -1,6 +1,5 @@
 const chokidar = require("chokidar");
 const bundleJS = require("./bundle-js");
-const bundleLocales = require("./bundle-locales");
 const copy = require("./copy");
 const reload = require("./reload");
 const {runTasks, log} = require("./utils");
@@ -9,7 +8,6 @@ const DEBOUNCE = 200;
 
 const watchers = [
     [["src/**/*.ts", "src/**/*.tsx", "src/**/*.js"], [bundleJS]],
-    [["src/_locales/**/*.config"], [bundleLocales]],
     [["src/config/**/*.config", "src/*.json", "src/ui/assets/**/*.*"], [copy]]
 ];
 

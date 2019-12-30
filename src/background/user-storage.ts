@@ -42,6 +42,7 @@ export default class UserStorage {
         return new Promise<UserSettings>((resolve) => {
             chrome.storage.local.get(this.defaultSettings, (local: UserSettings) => {
               local.theme = {...this.defaultSettings.theme, ...local.theme};
+             
               resolve(local);
             });
         });
@@ -67,29 +68,29 @@ export default class UserStorage {
     private timeout: number = null;
 
     set($settings: Partial<UserSettings>) {
-        if ($settings.siteList) {
-            if (!Array.isArray($settings.siteList)) {
-                const list = [];
-                for (const key in ($settings.siteList as any)) {
-                    const index = Number(key);
-                    if (!isNaN(index)) {
-                        list[index] = $settings.siteList[key];
-                    }
-                }
-                $settings.siteList = list;
-            }
-            const siteList = $settings.siteList.filter((pattern) => {
-                let isOK = false;
-                try {
-                    isURLMatched('https://google.com/', pattern);
-                    isOK = true;
-                } catch (err) {
-                    console.warn(`Pattern "${pattern}" excluded`);
-                }
-                return isOK && pattern !== '/';
-            });
-            $settings = {...$settings, siteList};
-        }
-        this.settings = {...this.settings, ...$settings};
-    }
+      if ($settings.siteList) {
+          if (!Array.isArray($settings.siteList)) {
+              const list = [];
+              for (const key in ($settings.siteList as any)) {
+                  const index = Number(key);
+                  if (!isNaN(index)) {
+                      list[index] = $settings.siteList[key];
+                  }
+              }
+              $settings.siteList = list;
+          }
+          const siteList = $settings.siteList.filter((pattern) => {
+              let isOK = false;
+              try {
+                  isURLMatched('https://google.com/', pattern);
+                  isOK = true;
+              } catch (err) {
+                  console.warn(`Pattern "${pattern}" excluded`);
+              }
+              return isOK && pattern !== '/';
+          });
+          $settings = {...$settings, siteList};
+      }
+      this.settings = {...this.settings, ...$settings};
+  }
 }

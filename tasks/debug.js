@@ -1,5 +1,4 @@
 const bundleJS = require("./bundle-js");
-const bundleLocales = require("./bundle-locales");
 const clean = require("./clean");
 const copy = require("./copy");
 const reload = require("./reload");
@@ -13,7 +12,7 @@ const options = {
 async function debug() {
     log.ok("DEBUG");
     try {
-        await runTasks([clean, bundleJS, bundleLocales, copy, reload], options);
+        await runTasks([clean, bundleJS, copy, reload], options);
         watch(options);
         log.ok("Watching...");
     } catch (err) {
