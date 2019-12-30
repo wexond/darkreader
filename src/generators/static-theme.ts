@@ -93,31 +93,27 @@ export default function createStaticStylesheet(
   return lines.filter(ln => ln).join("\n");
 }
 
-function createRuleGen(
-  getSelectors: (siteTheme: StaticTheme) => string[],
-  generateDeclarations: (theme: ThemeColors) => string[],
-  modifySelector: (s: string) => string = s => s
-) {
-  return (siteTheme: StaticTheme, themeColors: ThemeColors) => {
-    const selectors = getSelectors(siteTheme);
-    if (selectors == null || selectors.length === 0) {
-      return null;
-    }
-    const lines: string[] = [];
-    selectors.forEach((s, i) => {
-      let ln = modifySelector(s);
-      if (i < selectors.length - 1) {
-        ln += ",";
-      } else {
-        ln += " {";
-      }
-      lines.push(ln);
-    });
-    const declarations = generateDeclarations(themeColors);
-    declarations.forEach(d => lines.push(`    ${d} !important;`));
-    lines.push("}");
-    return lines.join("\n");
-  };
+function createRuleGen(getSelectors: (siteTheme: StaticTheme) => string[], generateDeclarations: (theme: ThemeColors) => string[], modifySelector: ((s: string) => string) = (s) => s) {
+    return (siteTheme: StaticTheme, themeColors: ThemeColors) => {
+        const selectors = getSelectors(siteTheme);
+        if (selectors == null || selectors.length === 0) {
+            return null;
+        }
+        const lines: string[] = [];
+        selectors.forEach((s, i) => {
+            let ln = modifySelector(s);
+            if (i < selectors.length - 1) {
+                ln += ',';
+            } else {
+                ln += ' {';
+            }
+            lines.push(ln);
+        });
+        const declarations = generateDeclarations(themeColors);
+        declarations.forEach((d) => lines.push(`    ${d} !important;`));
+        lines.push('}');
+        return lines.join('\n');
+    };
 }
 
 const mx = {

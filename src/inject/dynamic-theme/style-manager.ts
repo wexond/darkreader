@@ -195,11 +195,11 @@ export function manageStyle(element: HTMLLinkElement | HTMLStyleElement, {update
         let rulesChanged = (rulesModCache.size === 0);
         const notFoundCacheKeys = new Set(rulesModCache.keys());
         const filterKey = getFilterKey(filter);
-        let filterChanged = (filterKey !== prevFilterKey);
+        const filterChanged = (filterKey !== prevFilterKey);
 
         const modRules: ModifiableCSSRule[] = [];
         iterateCSSRules(rules, (rule) => {
-            let cssText = rule.cssText;
+            const cssText = rule.cssText;
             let textDiffersFromPrev = false;
 
             notFoundCacheKeys.delete(cssText);
@@ -470,7 +470,7 @@ function linkLoading(link: HTMLLinkElement) {
         const cleanUp = () => {
             link.removeEventListener('load', onLoad);
             link.removeEventListener('error', onError);
-        }
+        };
         const onLoad = () => {
             cleanUp();
             resolve();
@@ -492,7 +492,7 @@ async function loadText(url: string) {
     if (url.startsWith('data:')) {
         return await (await fetch(url)).text();
     }
-    return await bgFetch({url, responseType: 'text'});
+    return await bgFetch({url, responseType: 'text', mimeType: 'text/css'});
 }
 
 async function replaceCSSImports(cssText: string, basePath: string) {
@@ -501,7 +501,7 @@ async function replaceCSSImports(cssText: string, basePath: string) {
     cssText = replaceCSSRelativeURLsWithAbsolute(cssText, basePath);
 
     const importMatches = getMatches(cssImportRegex, cssText);
-    for (let match of importMatches) {
+    for (const match of importMatches) {
         const importURL = getCSSImportURL(match);
         const absoluteURL = getAbsoluteURL(basePath, importURL);
         let importedCSS: string;

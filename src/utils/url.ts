@@ -93,19 +93,19 @@ function createUrlRegex(urlTemplate: string): RegExp {
   return new RegExp(result, "i");
 }
 
-export function isURLEnabled(
-  url: string,
-  userSettings: UserSettings,
-  { isProtected, isInDarkList }
-) {
+export function isURLEnabled(url: string, userSettings: UserSettings, {isProtected, isInDarkList}) {
   if (isProtected) {
-    return false;
+      return false;
   }
   const isURLInUserList = isURLInList(url, userSettings.siteList);
-
   if (userSettings.applyToListedOnly) {
-    return isURLInUserList;
+      return isURLInUserList;
   }
-
-  return !isInDarkList && !isURLInUserList;
+  // TODO: Use `siteListEnabled`, `siteListDisabled`, `enabledByDefault` options.
+  // Delete `siteList` and `applyToListedOnly` options, transfer user's values.
+  const isURLInEnabledList = isURLInList(url, userSettings.siteListEnabled);
+  if (isURLInEnabledList && isInDarkList) {
+      return true;
+  }
+  return (!isInDarkList && !isURLInUserList);
 }

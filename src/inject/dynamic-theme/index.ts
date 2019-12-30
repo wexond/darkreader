@@ -181,7 +181,7 @@ function createManager(element: HTMLLinkElement | HTMLStyleElement) {
     return;
   }
 
-  let loadingStyleId = ++loadingStylesCounter;
+    const loadingStyleId = ++loadingStylesCounter;
 
   function loadingStart() {
     if (!isPageLoaded() || !didDocumentShowUp) {

@@ -3,8 +3,6 @@ import Messenger from "./messenger";
 import TabManager from "./tab-manager";
 import UserStorage from "./user-storage";
 import {
-  getCommands,
-  setShortcut,
   canInjectScript
 } from "./utils/extension-api";
 import { isURLInList, getURLHost, isURLEnabled } from "../utils/url";
@@ -20,7 +18,6 @@ import {
 import {
   ExtensionData,
   FilterConfig,
-  Shortcuts,
   UserSettings,
   TabInfo
 } from "../definitions";
@@ -40,7 +37,8 @@ export class Extension {
     this.messenger = new Messenger(this.getMessengerAdapter());
     this.tabs = new TabManager({
       getConnectionMessage: (url, frameURL) =>
-        this.getConnectionMessage(url, frameURL)
+        this.getConnectionMessage(url, frameURL),
+        onColorSchemeChange: this.onColorSchemeChange,
     });
     this.user = new UserStorage();
     this.awaiting = [];
@@ -52,13 +50,13 @@ export class Extension {
 
   private awaiting: (() => void)[];
 
+  private wasEnabledOnLastCheck: boolean;
+
   async start() {
     await this.config.load({ local: true });
 
     this.changeSettings(this.user.settings);
     console.log("loaded", this.user.settings);
-
-    this.registerCommands();
 
     this.ready = true;
     this.tabs.updateContentScript();
@@ -68,8 +66,6 @@ export class Extension {
 
     this.user.cleanup();
   }
-
-  private popupOpeningListener: () => void = null;
 
   private getMessengerAdapter() {
     return {
@@ -88,59 +84,34 @@ export class Extension {
       },
       changeSettings: settings => this.changeSettings(settings),
       setTheme: theme => this.setTheme(theme),
-      setShortcut: ({ command, shortcut }) =>
-        this.setShortcut(command, shortcut),
-      toggleSitePattern: pattern => this.toggleSitePattern(pattern),
-      onPopupOpen: () =>
-        this.popupOpeningListener && this.popupOpeningListener()
     };
   }
 
-  private registerCommands() {
-    if (!chrome.commands) {
-      // Fix for Firefox Android
-      return;
+  private handleAutoCheck = () => {
+    if (!this.ready) {
+        return;
     }
-    chrome.commands.onCommand.addListener(command => {
-      if (command === "toggle") {
-        console.log("Toggle command entered");
-        this.changeSettings({
-          enabled: !this.isEnabled()
-        });
-      }
-      if (command === "addSite") {
-        console.log("Add Site command entered");
-        this.toggleCurrentSite();
-      }
-      if (command === "switchEngine") {
-        console.log("Switch Engine command entered");
-        const engines = Object.values(ThemeEngines);
-        const index = engines.indexOf(this.user.settings.theme.engine);
-        const next =
-          index === engines.length - 1 ? engines[0] : engines[index + 1];
-        this.setTheme({ engine: next });
-      }
-    });
-  }
+    const isEnabled = this.isEnabled();
+    if (this.wasEnabledOnLastCheck !== isEnabled) {
+        this.wasEnabledOnLastCheck = isEnabled;
+        // this.onAppToggle();
+        this.tabs.sendMessage(this.getTabMessage);
+        this.reportChanges();
+    }
+};
 
-  private async getShortcuts() {
-    const commands = await getCommands();
-    return commands.reduce(
-      (map, cmd) => Object.assign(map, { [cmd.name]: cmd.shortcut }),
-      {} as Shortcuts
-    );
-  }
+  private wasLastColorSchemeDark = null;
 
-  setShortcut(command: string, shortcut: string) {
-    setShortcut(command, shortcut);
-  }
+  private onColorSchemeChange = ({isDark}) => {
+      this.wasLastColorSchemeDark = isDark;
+      this.handleAutoCheck();
+  };
 
   private async collectData(): Promise<ExtensionData> {
     return {
       isEnabled: this.isEnabled(),
       isReady: this.ready,
-      settings: this.user.settings,
-      shortcuts: await this.getShortcuts()
+      settings: this.user.settings
     };
   }
 

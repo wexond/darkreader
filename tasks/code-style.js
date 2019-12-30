@@ -19,9 +19,9 @@ const extensions = ["html", "js"];
 
 async function codeStyle({production}) {
     const dir = getDestDir({production});
-    const files = await globby(extensions.map(ext => `${dir}/**/*.${ext}`));
-    for (let file of files) {
-        const code = await fs.readFile(file, "utf8");
+    const files = await globby(extensions.map((ext) => `${dir}/**/*.${ext}`));
+    for (const file of files) {
+        const code = await fs.readFile(file, 'utf8');
         const formatted = prettier.format(code, {
             ...options,
             filepath: file

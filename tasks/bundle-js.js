@@ -1,12 +1,13 @@
-const fs = require("fs");
-const os = require("os");
-const rollup = require("rollup");
-const rollupPluginCommonjs = require("rollup-plugin-commonjs");
-const rollupPluginNodeResolve = require("rollup-plugin-node-resolve");
-const rollupPluginReplace = require("rollup-plugin-replace");
-const rollupPluginTypescript = require("rollup-plugin-typescript2");
-const typescript = require("typescript");
-const {getDestDir} = require("./paths");
+const fs = require('fs');
+const os = require('os');
+const rollup = require('rollup');
+const rollupPluginCommonjs = require('rollup-plugin-commonjs');
+const rollupPluginNodeResolve = require('rollup-plugin-node-resolve');
+const rollupPluginReplace = require('rollup-plugin-replace');
+const rollupPluginTypescript = require('rollup-plugin-typescript2');
+const typescript = require('typescript');
+const {getDestDir} = require('./paths');
+const {PORT} = require('./reload');
 
 function getJSFiles({production}) {
     const dir = getDestDir({production});
@@ -36,9 +37,10 @@ async function bundleJSEntry({src, dest, production}) {
                     : `${fs.realpathSync(os.tmpdir())}/darkreader_typescript_cache`
             }),
             rollupPluginReplace({
-                __DEBUG__: production ? "false" : "true"
-            })
-        ].filter(x => x)
+                '__DEBUG__': production ? 'false' : 'true',
+                '__PORT__': production ? '-1' : String(PORT),
+            }),
+        ].filter((x) => x)
     });
     await bundle.write({
         file: dest,

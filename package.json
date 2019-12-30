@@ -15,37 +15,39 @@
     "type": "git",
     "url": "https://github.com/wexond/darkreader.git"
   },
-  "author": "Eryk Rakowski <sentialx@gmail.com> (https://wexond.net)",
+  "author": "Alexander Shutau <darkreaderapp@gmail.com> (https://darkreader.org/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wexond/darkreader/issues"
   },
   "homepage": "https://wexond.net/",
   "dependencies": {
-    "malevic": "0.16.3"
+    "malevic": "0.17.1"
   },
   "devDependencies": {
-    "@types/chrome": "0.0.86",
-    "@types/jest": "24.0.15",
-    "@types/node": "12.6.8",
-    "@typescript-eslint/eslint-plugin": "1.13.0",
-    "@typescript-eslint/parser": "1.13.0",
-    "chokidar": "3.0.2",
-    "eslint": "6.1.0",
+    "@types/chrome": "0.0.91",
+    "@types/jest": "24.0.23",
+    "@types/node": "12.12.14",
+    "@typescript-eslint/eslint-plugin": "2.10.0",
+    "@typescript-eslint/parser": "2.10.0",
+    "chokidar": "3.3.0",
+    "eslint": "6.7.2",
     "eslint-plugin-local": "1.0.0",
     "fs-extra": "8.1.0",
     "globby": "10.0.1",
-    "jest": "24.8.0",
-    "prettier": "1.18.2",
-    "rollup": "1.17.0",
-    "rollup-plugin-commonjs": "10.0.1",
+    "jest": "24.9.0",
+    "less": "3.10.3",
+    "prettier": "1.19.1",
+    "rollup": "1.27.8",
+    "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-replace": "2.2.0",
-    "rollup-plugin-typescript2": "0.22.0",
-    "ts-jest": "24.0.2",
-    "ts-node": "8.3.0",
-    "tsconfig-paths": "3.8.0",
-    "typescript": "3.5.3",
-    "yazl": "2.5.1"
+    "rollup-plugin-typescript2": "0.25.3",
+    "ts-jest": "24.2.0",
+    "ts-node": "8.4.1",
+    "tsconfig-paths": "3.9.0",
+    "typescript": "3.7.3",
+    "yazl": "2.5.1",
+    "ws": "7.2.0"
   }
 }

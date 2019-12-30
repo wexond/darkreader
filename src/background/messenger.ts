@@ -11,9 +11,7 @@ interface ExtensionAdapter {
   getActiveTabInfo: () => Promise<TabInfo>;
   changeSettings: (settings: Partial<UserSettings>) => void;
   setTheme: (theme: Partial<FilterConfig>) => void;
-  setShortcut: ({ command, shortcut }) => void;
   toggleSitePattern: (pattern: string) => void;
-  onPopupOpen: () => void;
 }
 
 export default class Messenger {
@@ -23,10 +21,10 @@ export default class Messenger {
   constructor(adapter: ExtensionAdapter) {
     this.reporters = new Set();
     this.adapter = adapter;
+    
     chrome.runtime.onConnect.addListener(port => {
       if (port.name === "ui") {
         port.onMessage.addListener(message => this.onUIMessage(port, message));
-        this.adapter.onPopupOpen();
       }
     });
 
@@ -66,10 +64,6 @@ export default class Messenger {
       }
       case "set-theme": {
         this.adapter.setTheme(data);
-        break;
-      }
-      case "set-shortcut": {
-        this.adapter.setShortcut(data);
         break;
       }
       case "toggle-site-pattern": {
